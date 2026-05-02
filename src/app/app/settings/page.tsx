@@ -92,7 +92,7 @@ export default function SettingsPage() {
                 name="centerName"
                 value={formData.centerName}
                 onChange={handleChange}
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-slate-400"
+                className="sc-input"
                 placeholder="Enter center name"
               />
             </div>
@@ -106,7 +106,7 @@ export default function SettingsPage() {
                 name="centerType"
                 value={formData.centerType}
                 onChange={handleChange}
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-slate-400"
+                className="sc-input"
                 placeholder="Ex: Tutoring Center"
               />
             </div>
@@ -120,7 +120,7 @@ export default function SettingsPage() {
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-slate-400"
+                className="sc-input"
                 placeholder="Enter phone"
               />
             </div>
@@ -134,7 +134,7 @@ export default function SettingsPage() {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-slate-400"
+                className="sc-input"
                 placeholder="Enter email"
               />
             </div>
@@ -149,7 +149,7 @@ export default function SettingsPage() {
               value={formData.address}
               onChange={handleChange}
               rows={3}
-              className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-slate-400"
+              className="sc-textarea"
               placeholder="Enter address"
             />
           </div>
@@ -172,7 +172,7 @@ export default function SettingsPage() {
                 name="logoUrl"
                 value={formData.logoUrl}
                 onChange={handleChange}
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-slate-400"
+                className="sc-input"
                 placeholder="Paste logo image URL"
               />
             </div>
@@ -187,14 +187,14 @@ export default function SettingsPage() {
                   name="primaryColor"
                   value={formData.primaryColor}
                   onChange={handleChange}
-                  className="h-12 w-16 rounded-lg border border-slate-200 bg-white p-1"
+                  className="sc-input"
                 />
                 <input
                   type="text"
                   name="primaryColor"
                   value={formData.primaryColor}
                   onChange={handleChange}
-                  className="flex-1 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-slate-400"
+                  className="sc-input"
                   placeholder="#0f172a"
                 />
               </div>
@@ -252,7 +252,7 @@ export default function SettingsPage() {
                 name="currency"
                 value={formData.currency}
                 onChange={handleChange}
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-slate-400"
+                className="sc-select"
               >
                 <option value="MAD">MAD</option>
                 <option value="EUR">EUR</option>

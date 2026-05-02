@@ -227,7 +227,7 @@ export default function ReportsPage() {
           <select
             value={selectedPeriod}
             onChange={(e) => setSelectedPeriod(e.target.value as PeriodOption)}
-            className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 outline-none focus:border-slate-400"
+            className="sc-select"
           >
             <option value="Last 3 Months">Last 3 Months</option>
             <option value="Last 6 Months">Last 6 Months</option>

@@ -181,7 +181,7 @@ export default function TeachersPage() {
           placeholder="Search by name, phone, email, subject, or group..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-slate-400"
+          className="sc-input"
         />
       </div>
 
@@ -280,7 +280,7 @@ export default function TeachersPage() {
                   name="fullName"
                   value={formData.fullName}
                   onChange={handleChange}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-slate-400"
+                  className="sc-input"
                   placeholder="Enter full name"
                 />
               </div>
@@ -295,7 +295,7 @@ export default function TeachersPage() {
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-slate-400"
+                    className="sc-input"
                     placeholder="Enter phone number"
                   />
                 </div>
@@ -309,7 +309,7 @@ export default function TeachersPage() {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-slate-400"
+                    className="sc-input"
                     placeholder="Enter email"
                   />
                 </div>
@@ -324,7 +324,7 @@ export default function TeachersPage() {
                   name="subject"
                   value={formData.subject}
                   onChange={handleChange}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-slate-400"
+                  className="sc-input"
                   placeholder="Ex: Mathematics"
                 />
               </div>
@@ -338,7 +338,7 @@ export default function TeachersPage() {
                   value={formData.assignedGroups}
                   onChange={handleChange}
                   rows={4}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-slate-400"
+                  className="sc-textarea"
                   placeholder="Ex: Math Group A, Math Group B"
                 />
               </div>

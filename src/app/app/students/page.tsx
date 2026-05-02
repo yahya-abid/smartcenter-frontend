@@ -186,7 +186,7 @@ export default function StudentsPage() {
           placeholder="Search by name, phone, level, or group..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-slate-400"
+          className="sc-input"
         />
       </div>
 
@@ -293,7 +293,7 @@ export default function StudentsPage() {
                   name="fullName"
                   value={formData.fullName}
                   onChange={handleChange}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-slate-400"
+                  className="sc-input"
                   placeholder="Enter full name"
                 />
               </div>
@@ -307,7 +307,7 @@ export default function StudentsPage() {
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-slate-400"
+                  className="sc-input"
                   placeholder="Enter phone number"
                 />
               </div>
@@ -321,7 +321,7 @@ export default function StudentsPage() {
                   name="level"
                   value={formData.level}
                   onChange={handleChange}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-slate-400"
+                  className="sc-input"
                   placeholder="Ex: 1ère Bac"
                 />
               </div>
@@ -335,7 +335,7 @@ export default function StudentsPage() {
                   name="group"
                   value={formData.group}
                   onChange={handleChange}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-slate-400"
+                  className="sc-input"
                   placeholder="Ex: Math Group A"
                 />
               </div>
@@ -348,7 +348,7 @@ export default function StudentsPage() {
                   name="paymentStatus"
                   value={formData.paymentStatus}
                   onChange={handleChange}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-slate-400"
+                  className="sc-select"
                 >
                   <option value="PAID">PAID</option>
                   <option value="LATE">LATE</option>

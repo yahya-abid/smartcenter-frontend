@@ -12,7 +12,7 @@ export function Topbar() {
         <div className="hidden md:block">
           <input
             placeholder="Search..."
-            className="w-64 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-slate-400"
+            className="sc-input w-64 py-2 px-3"
           />
         </div>
 

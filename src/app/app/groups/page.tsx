@@ -177,7 +177,7 @@ export default function GroupsPage() {
           placeholder="Search by group, subject, teacher, schedule, or room..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-slate-400"
+          className="sc-input"
         />
       </div>
 
@@ -276,7 +276,7 @@ export default function GroupsPage() {
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-slate-400"
+                  className="sc-input"
                   placeholder="Ex: Math Group A"
                 />
               </div>
@@ -291,7 +291,7 @@ export default function GroupsPage() {
                     name="subject"
                     value={formData.subject}
                     onChange={handleChange}
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-slate-400"
+                    className="sc-input"
                     placeholder="Ex: Mathematics"
                   />
                 </div>
@@ -305,7 +305,7 @@ export default function GroupsPage() {
                     name="teacher"
                     value={formData.teacher}
                     onChange={handleChange}
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-slate-400"
+                    className="sc-input"
                     placeholder="Ex: Ahmed El Idrissi"
                   />
                 </div>
@@ -321,7 +321,7 @@ export default function GroupsPage() {
                     name="schedule"
                     value={formData.schedule}
                     onChange={handleChange}
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-slate-400"
+                    className="sc-input"
                     placeholder="Ex: Mon & Wed - 18:00"
                   />
                 </div>
@@ -335,7 +335,7 @@ export default function GroupsPage() {
                     name="room"
                     value={formData.room}
                     onChange={handleChange}
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-slate-400"
+                    className="sc-input"
                     placeholder="Ex: Room 1"
                   />
                 </div>

@@ -216,7 +216,7 @@ export default function PaymentsPage() {
           placeholder="Search by student, month, amount, method, status, or receipt..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-slate-400"
+          className="sc-input"
         />
       </div>
 
@@ -332,7 +332,7 @@ export default function PaymentsPage() {
                   name="studentName"
                   value={formData.studentName}
                   onChange={handleChange}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-slate-400"
+                  className="sc-input"
                   placeholder="Enter student name"
                 />
               </div>
@@ -347,7 +347,7 @@ export default function PaymentsPage() {
                     name="month"
                     value={formData.month}
                     onChange={handleChange}
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-slate-400"
+                    className="sc-input"
                     placeholder="Ex: April 2026"
                   />
                 </div>
@@ -361,7 +361,7 @@ export default function PaymentsPage() {
                     name="amount"
                     value={formData.amount}
                     onChange={handleChange}
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-slate-400"
+                    className="sc-input"
                     placeholder="Ex: 600 MAD"
                   />
                 </div>
@@ -377,7 +377,7 @@ export default function PaymentsPage() {
                     name="method"
                     value={formData.method}
                     onChange={handleChange}
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-slate-400"
+                    className="sc-input"
                     placeholder="Ex: Cash / Transfer"
                   />
                 </div>
@@ -391,7 +391,7 @@ export default function PaymentsPage() {
                     name="receiptNumber"
                     value={formData.receiptNumber}
                     onChange={handleChange}
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-slate-400"
+                    className="sc-input"
                     placeholder="Ex: RC-004"
                   />
                 </div>
@@ -405,7 +405,7 @@ export default function PaymentsPage() {
                   name="status"
                   value={formData.status}
                   onChange={handleChange}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-slate-400"
+                  className="sc-select"
                 >
                   <option value="PAID">PAID</option>
                   <option value="LATE">LATE</option>

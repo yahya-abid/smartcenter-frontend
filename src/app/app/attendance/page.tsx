@@ -118,7 +118,7 @@ export default function AttendancePage() {
           <select
             value={selectedGroup}
             onChange={(e) => setSelectedGroup(e.target.value)}
-            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-slate-400"
+            className="sc-select"
           >
             {groups.map((group) => (
               <option key={group} value={group}>
@@ -136,7 +136,7 @@ export default function AttendancePage() {
             type="date"
             value={selectedDate}
             onChange={(e) => setSelectedDate(e.target.value)}
-            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-slate-400"
+            className="sc-input"
           />
         </div>
 
@@ -149,7 +149,7 @@ export default function AttendancePage() {
             placeholder="Search by student name..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-slate-400"
+            className="sc-input"
           />
         </div>
       </div>
