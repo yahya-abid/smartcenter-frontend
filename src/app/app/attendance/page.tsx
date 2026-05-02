@@ -1,10 +1,294 @@
+"use client";
+
+import { useMemo, useState } from "react";
+
+type AttendanceStatus = "PRESENT" | "ABSENT";
+
+type AttendanceStudent = {
+  id: number;
+  fullName: string;
+  group: string;
+  status: AttendanceStatus;
+};
+
+const initialAttendanceStudents: AttendanceStudent[] = [
+  { id: 1, fullName: "Youssef El Amrani", group: "Math Group A", status: "PRESENT" },
+  { id: 2, fullName: "Salma Benali", group: "Math Group A", status: "ABSENT" },
+  { id: 3, fullName: "Omar Ait Lahcen", group: "Math Group A", status: "PRESENT" },
+  { id: 4, fullName: "Imane Chraibi", group: "English Group B", status: "PRESENT" },
+  { id: 5, fullName: "Zakaria Moutaoukil", group: "English Group B", status: "ABSENT" },
+  { id: 6, fullName: "Rania El Fassi", group: "Physics Group A", status: "PRESENT" },
+  { id: 7, fullName: "Anas Berrada", group: "Physics Group A", status: "ABSENT" },
+];
+
+const mockHistory = [
+  {
+    id: 1,
+    date: "2026-04-28",
+    group: "Math Group A",
+    presentCount: 2,
+    absentCount: 1,
+  },
+  {
+    id: 2,
+    date: "2026-04-27",
+    group: "English Group B",
+    presentCount: 1,
+    absentCount: 1,
+  },
+  {
+    id: 3,
+    date: "2026-04-26",
+    group: "Physics Group A",
+    presentCount: 1,
+    absentCount: 1,
+  },
+];
+
 export default function AttendancePage() {
+  const [students, setStudents] = useState<AttendanceStudent[]>(initialAttendanceStudents);
+  const [selectedGroup, setSelectedGroup] = useState("Math Group A");
+  const [selectedDate, setSelectedDate] = useState(
+    new Date().toISOString().split("T")[0]
+  );
+  const [search, setSearch] = useState("");
+
+  const groups = useMemo(() => {
+    return Array.from(new Set(initialAttendanceStudents.map((s) => s.group)));
+  }, []);
+
+  const filteredStudents = useMemo(() => {
+    const term = search.toLowerCase();
+
+    return students.filter((student) => {
+      return (
+        student.group === selectedGroup &&
+        student.fullName.toLowerCase().includes(term)
+      );
+    });
+  }, [students, selectedGroup, search]);
+
+  const presentCount = filteredStudents.filter(
+    (student) => student.status === "PRESENT"
+  ).length;
+
+  const absentCount = filteredStudents.filter(
+    (student) => student.status === "ABSENT"
+  ).length;
+
+  function setStudentStatus(id: number, status: AttendanceStatus) {
+    setStudents((prev) =>
+      prev.map((student) =>
+        student.id === id ? { ...student, status } : student
+      )
+    );
+  }
+
+  function handleSaveAttendance() {
+    alert(
+      `Attendance saved for ${selectedGroup} on ${selectedDate}.\nPresent: ${presentCount}\nAbsent: ${absentCount}`
+    );
+  }
+
   return (
     <div>
-      <h1 className="text-2xl font-bold text-slate-900">Attendance</h1>
-      <p className="mt-2 text-slate-600">
-        Mark attendance per group and view attendance history.
-      </p>
+      {/* Header */}
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-900">Attendance</h1>
+          <p className="mt-1 text-slate-600">
+            Mark attendance by group and track presence history.
+          </p>
+        </div>
+
+        <button
+          onClick={handleSaveAttendance}
+          className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800"
+        >
+          Save Attendance
+        </button>
+      </div>
+
+      {/* Filters */}
+      <div className="mt-6 grid gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm md:grid-cols-3">
+        <div>
+          <label className="mb-1 block text-sm font-medium text-slate-700">
+            Select Group
+          </label>
+          <select
+            value={selectedGroup}
+            onChange={(e) => setSelectedGroup(e.target.value)}
+            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-slate-400"
+          >
+            {groups.map((group) => (
+              <option key={group} value={group}>
+                {group}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label className="mb-1 block text-sm font-medium text-slate-700">
+            Date
+          </label>
+          <input
+            type="date"
+            value={selectedDate}
+            onChange={(e) => setSelectedDate(e.target.value)}
+            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-slate-400"
+          />
+        </div>
+
+        <div>
+          <label className="mb-1 block text-sm font-medium text-slate-700">
+            Search Student
+          </label>
+          <input
+            type="text"
+            placeholder="Search by student name..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-slate-400"
+          />
+        </div>
+      </div>
+
+      {/* Summary cards */}
+      <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <p className="text-sm font-semibold text-slate-600">Selected Group</p>
+          <p className="mt-2 text-xl font-bold text-slate-900">{selectedGroup}</p>
+        </div>
+
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <p className="text-sm font-semibold text-slate-600">Present</p>
+          <p className="mt-2 text-xl font-bold text-emerald-600">{presentCount}</p>
+        </div>
+
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <p className="text-sm font-semibold text-slate-600">Absent</p>
+          <p className="mt-2 text-xl font-bold text-rose-600">{absentCount}</p>
+        </div>
+      </div>
+
+      {/* Attendance table */}
+      <div className="mt-6 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <div className="overflow-x-auto">
+          <table className="min-w-full text-left text-sm">
+            <thead className="bg-slate-50 text-slate-600">
+              <tr>
+                <th className="px-4 py-3 font-semibold">Student</th>
+                <th className="px-4 py-3 font-semibold">Group</th>
+                <th className="px-4 py-3 font-semibold">Status</th>
+                <th className="px-4 py-3 font-semibold">Mark Attendance</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {filteredStudents.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan={4}
+                    className="px-4 py-8 text-center text-slate-500"
+                  >
+                    No students found for this group.
+                  </td>
+                </tr>
+              ) : (
+                filteredStudents.map((student) => (
+                  <tr
+                    key={student.id}
+                    className="border-t border-slate-200 text-slate-700"
+                  >
+                    <td className="px-4 py-3 font-medium text-slate-900">
+                      {student.fullName}
+                    </td>
+                    <td className="px-4 py-3">{student.group}</td>
+                    <td className="px-4 py-3">
+                      <span
+                        className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${
+                          student.status === "PRESENT"
+                            ? "bg-emerald-100 text-emerald-700"
+                            : "bg-rose-100 text-rose-700"
+                        }`}
+                      >
+                        {student.status}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => setStudentStatus(student.id, "PRESENT")}
+                          className={`rounded-lg px-3 py-1.5 text-xs font-semibold ${
+                            student.status === "PRESENT"
+                              ? "bg-emerald-600 text-white"
+                              : "border border-slate-200 text-slate-700 hover:bg-slate-50"
+                          }`}
+                        >
+                          Present
+                        </button>
+
+                        <button
+                          onClick={() => setStudentStatus(student.id, "ABSENT")}
+                          className={`rounded-lg px-3 py-1.5 text-xs font-semibold ${
+                            student.status === "ABSENT"
+                              ? "bg-rose-600 text-white"
+                              : "border border-slate-200 text-slate-700 hover:bg-slate-50"
+                          }`}
+                        >
+                          Absent
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* History */}
+      <div className="mt-8">
+        <h2 className="text-lg font-bold text-slate-900">Attendance History</h2>
+        <p className="mt-1 text-sm text-slate-600">
+          Previously saved attendance sessions (mock history for now).
+        </p>
+
+        <div className="mt-4 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+          <div className="overflow-x-auto">
+            <table className="min-w-full text-left text-sm">
+              <thead className="bg-slate-50 text-slate-600">
+                <tr>
+                  <th className="px-4 py-3 font-semibold">Date</th>
+                  <th className="px-4 py-3 font-semibold">Group</th>
+                  <th className="px-4 py-3 font-semibold">Present</th>
+                  <th className="px-4 py-3 font-semibold">Absent</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {mockHistory.map((item) => (
+                  <tr
+                    key={item.id}
+                    className="border-t border-slate-200 text-slate-700"
+                  >
+                    <td className="px-4 py-3">{item.date}</td>
+                    <td className="px-4 py-3">{item.group}</td>
+                    <td className="px-4 py-3 text-emerald-600 font-semibold">
+                      {item.presentCount}
+                    </td>
+                    <td className="px-4 py-3 text-rose-600 font-semibold">
+                      {item.absentCount}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
