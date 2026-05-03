@@ -1,6 +1,10 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { EmptyState } from "@/components/ui/EmptyState";
+import { PageHeader } from "@/components/ui/PageHeader";
+import { SectionCard } from "@/components/ui/SectionCard";
+import { StatusBadge } from "@/components/ui/StatusBadge";
 
 type PaymentStatus = "PAID" | "LATE" | "PENDING";
 
@@ -62,16 +66,16 @@ const emptyForm: PaymentFormData = {
   receiptNumber: "",
 };
 
-function getStatusClasses(status: PaymentStatus) {
+function getPaymentVariant(status: PaymentStatus) {
   switch (status) {
     case "PAID":
-      return "bg-emerald-100 text-emerald-700";
+      return "success";
     case "LATE":
-      return "bg-rose-100 text-rose-700";
+      return "danger";
     case "PENDING":
-      return "bg-amber-100 text-amber-700";
+      return "warning";
     default:
-      return "bg-slate-100 text-slate-700";
+      return "neutral";
   }
 }
 
@@ -96,6 +100,15 @@ export default function PaymentsPage() {
       );
     });
   }, [payments, search]);
+
+  const totals = useMemo(() => {
+    return {
+      total: payments.length,
+      paid: payments.filter((p) => p.status === "PAID").length,
+      late: payments.filter((p) => p.status === "LATE").length,
+      pending: payments.filter((p) => p.status === "PENDING").length,
+    };
+  }, [payments]);
 
   function openAddModal() {
     setEditingPaymentId(null);
@@ -126,7 +139,7 @@ export default function PaymentsPage() {
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) {
     const field = e.target.name as keyof PaymentFormData;
-    const value = e.target.value;
+    const value = e.target.value as PaymentFormData[keyof PaymentFormData];
 
     setFormData((prev) => ({
       ...prev,
@@ -162,12 +175,7 @@ export default function PaymentsPage() {
     } else {
       const newPayment: Payment = {
         id: Date.now(),
-        studentName: formData.studentName,
-        month: formData.month,
-        amount: formData.amount,
-        method: formData.method,
-        status: formData.status,
-        receiptNumber: formData.receiptNumber,
+        ...formData,
       };
 
       setPayments((prev) => [newPayment, ...prev]);
@@ -180,7 +188,6 @@ export default function PaymentsPage() {
     const confirmed = window.confirm(
       "Are you sure you want to delete this payment?"
     );
-
     if (!confirmed) return;
 
     setPayments((prev) => prev.filter((payment) => payment.id !== id));
@@ -191,26 +198,52 @@ export default function PaymentsPage() {
   }
 
   return (
-    <div>
-      {/* Header */}
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900">Payments</h1>
-          <p className="mt-1 text-slate-600">
-            Track payments, status, methods, and receipts.
+    <div className="space-y-6">
+      <PageHeader
+        title="Payments"
+        description="Track payments, payment status, and receipts."
+        action={
+          <button
+            onClick={openAddModal}
+            className="rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white hover:bg-slate-800"
+          >
+            + Add Payment
+          </button>
+        }
+      />
+
+      {/* Summary cards */}
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <p className="text-sm font-semibold text-slate-600">Total Payments</p>
+          <p className="mt-2 text-2xl font-bold text-slate-900">
+            {totals.total}
           </p>
         </div>
 
-        <button
-          onClick={openAddModal}
-          className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800"
-        >
-          + Add Payment
-        </button>
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <p className="text-sm font-semibold text-slate-600">Paid</p>
+          <p className="mt-2 text-2xl font-bold text-emerald-600">
+            {totals.paid}
+          </p>
+        </div>
+
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <p className="text-sm font-semibold text-slate-600">Late</p>
+          <p className="mt-2 text-2xl font-bold text-rose-600">
+            {totals.late}
+          </p>
+        </div>
+
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <p className="text-sm font-semibold text-slate-600">Pending</p>
+          <p className="mt-2 text-2xl font-bold text-amber-600">
+            {totals.pending}
+          </p>
+        </div>
       </div>
 
-      {/* Search */}
-      <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+      <SectionCard title="Search" description="Find payments by any field.">
         <input
           type="text"
           placeholder="Search by student, month, amount, method, status, or receipt..."
@@ -218,39 +251,45 @@ export default function PaymentsPage() {
           onChange={(e) => setSearch(e.target.value)}
           className="sc-input"
         />
-      </div>
+      </SectionCard>
 
-      {/* Table */}
-      <div className="mt-6 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-        <div className="overflow-x-auto">
-          <table className="min-w-full text-left text-sm">
-            <thead className="bg-slate-50 text-slate-600">
-              <tr>
-                <th className="px-4 py-3 font-semibold">Student</th>
-                <th className="px-4 py-3 font-semibold">Month</th>
-                <th className="px-4 py-3 font-semibold">Amount</th>
-                <th className="px-4 py-3 font-semibold">Method</th>
-                <th className="px-4 py-3 font-semibold">Status</th>
-                <th className="px-4 py-3 font-semibold">Receipt</th>
-                <th className="px-4 py-3 font-semibold">Actions</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {filteredPayments.length === 0 ? (
+      <SectionCard
+        title="Payments List"
+        description={`${filteredPayments.length} result(s) found`}
+      >
+        {filteredPayments.length === 0 ? (
+          <EmptyState
+            title="No payments found"
+            description="Try another search term or add a new payment."
+            action={
+              <button
+                onClick={openAddModal}
+                className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800"
+              >
+                Add Payment
+              </button>
+            }
+          />
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="min-w-full text-left text-sm">
+              <thead className="bg-slate-50 text-slate-600">
                 <tr>
-                  <td
-                    colSpan={7}
-                    className="px-4 py-8 text-center text-slate-500"
-                  >
-                    No payments found.
-                  </td>
+                  <th className="px-4 py-3 font-semibold">Student</th>
+                  <th className="px-4 py-3 font-semibold">Month</th>
+                  <th className="px-4 py-3 font-semibold">Amount</th>
+                  <th className="px-4 py-3 font-semibold">Method</th>
+                  <th className="px-4 py-3 font-semibold">Status</th>
+                  <th className="px-4 py-3 font-semibold">Receipt</th>
+                  <th className="px-4 py-3 font-semibold">Actions</th>
                 </tr>
-              ) : (
-                filteredPayments.map((payment) => (
+              </thead>
+
+              <tbody>
+                {filteredPayments.map((payment) => (
                   <tr
                     key={payment.id}
-                    className="border-t border-slate-200 text-slate-700"
+                    className="border-t border-slate-200 text-slate-700 transition hover:bg-slate-50"
                   >
                     <td className="px-4 py-3 font-medium text-slate-900">
                       {payment.studentName}
@@ -259,13 +298,10 @@ export default function PaymentsPage() {
                     <td className="px-4 py-3">{payment.amount}</td>
                     <td className="px-4 py-3">{payment.method}</td>
                     <td className="px-4 py-3">
-                      <span
-                        className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${getStatusClasses(
-                          payment.status
-                        )}`}
-                      >
-                        {payment.status}
-                      </span>
+                      <StatusBadge
+                        label={payment.status}
+                        variant={getPaymentVariant(payment.status)}
+                      />
                     </td>
                     <td className="px-4 py-3">
                       <button
@@ -293,12 +329,12 @@ export default function PaymentsPage() {
                       </div>
                     </td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </SectionCard>
 
       {/* Modal */}
       {isModalOpen && (
