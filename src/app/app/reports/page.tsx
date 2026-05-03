@@ -4,6 +4,8 @@ import { useMemo, useState } from "react";
 import { jsPDF } from "jspdf";
 import { autoTable } from "jspdf-autotable";
 import * as XLSX from "xlsx";
+import { PageHeader } from "@/components/ui/PageHeader";
+import { SectionCard } from "@/components/ui/SectionCard";
 
 type RevenueItem = {
   month: string;
@@ -169,7 +171,8 @@ export default function ReportsPage() {
       ]),
     });
 
-    const finalY = (doc as any).lastAutoTable?.finalY || 120;
+    const finalY = (doc as jsPDF & { lastAutoTable?: { finalY?: number } })
+      .lastAutoTable?.finalY || 120;
 
     autoTable(doc, {
       startY: finalY + 10,
@@ -213,45 +216,43 @@ export default function ReportsPage() {
   }
 
   return (
-    <div>
-      {/* Header */}
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900">Reports</h1>
-          <p className="mt-1 text-slate-600">
-            Revenue, attendance, student distribution, and exports.
-          </p>
-        </div>
+    <div className="space-y-6">
+      <PageHeader
+        title="Reports"
+        description="Revenue, attendance, student distribution, and exports."
+        action={
+          <div className="flex flex-wrap gap-3">
+            <select
+              value={selectedPeriod}
+              onChange={(e) =>
+                setSelectedPeriod(e.target.value as PeriodOption)
+              }
+              className="sc-select min-w-[160px] py-2"
+            >
+              <option value="Last 3 Months">Last 3 Months</option>
+              <option value="Last 6 Months">Last 6 Months</option>
+              <option value="All Data">All Data</option>
+            </select>
 
-        <div className="flex flex-wrap gap-3">
-          <select
-            value={selectedPeriod}
-            onChange={(e) => setSelectedPeriod(e.target.value as PeriodOption)}
-            className="sc-select"
-          >
-            <option value="Last 3 Months">Last 3 Months</option>
-            <option value="Last 6 Months">Last 6 Months</option>
-            <option value="All Data">All Data</option>
-          </select>
+            <button
+              onClick={exportToPDF}
+              className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+            >
+              Export PDF
+            </button>
 
-          <button
-            onClick={exportToPDF}
-            className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
-          >
-            Export PDF
-          </button>
-
-          <button
-            onClick={exportToExcel}
-            className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800"
-          >
-            Export Excel
-          </button>
-        </div>
-      </div>
+            <button
+              onClick={exportToExcel}
+              className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800"
+            >
+              Export Excel
+            </button>
+          </div>
+        }
+      />
 
       {/* Summary cards */}
-      <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <p className="text-sm font-semibold text-slate-600">Total Revenue</p>
           <p className="mt-2 text-2xl font-bold text-slate-900">
@@ -260,7 +261,9 @@ export default function ReportsPage() {
         </div>
 
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <p className="text-sm font-semibold text-slate-600">Average Attendance</p>
+          <p className="text-sm font-semibold text-slate-600">
+            Average Attendance
+          </p>
           <p className="mt-2 text-2xl font-bold text-emerald-600">
             {averageAttendance}%
           </p>
@@ -281,27 +284,27 @@ export default function ReportsPage() {
         </div>
       </div>
 
-      {/* Revenue chart + Attendance overview */}
-      <div className="mt-6 grid gap-6 lg:grid-cols-2">
-        {/* Revenue */}
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <h2 className="text-lg font-bold text-slate-900">Revenue Overview</h2>
-          <p className="mt-1 text-sm text-slate-600">
-            Revenue summary based on the selected period.
-          </p>
-
-          <div className="mt-6 flex items-end gap-3">
+      {/* Revenue + Attendance */}
+      <div className="grid gap-6 xl:grid-cols-2">
+        <SectionCard
+          title="Revenue Overview"
+          description="Revenue summary based on the selected period."
+        >
+          <div className="mt-2 flex items-end gap-3">
             {visibleRevenueData.map((item) => {
               const height = (item.amount / maxRevenue) * 180;
 
               return (
-                <div key={item.month} className="flex flex-1 flex-col items-center">
+                <div
+                  key={item.month}
+                  className="flex flex-1 flex-col items-center"
+                >
                   <div
-                    className="w-full rounded-t-xl bg-slate-900"
+                    className="w-full rounded-t-2xl bg-slate-900"
                     style={{ height: `${height}px` }}
                     title={`${item.amount} MAD`}
                   />
-                  <p className="mt-2 text-xs font-medium text-slate-600">
+                  <p className="mt-3 text-xs font-medium text-slate-600">
                     {item.month}
                   </p>
                   <p className="text-xs text-slate-500">{item.amount}</p>
@@ -309,20 +312,19 @@ export default function ReportsPage() {
               );
             })}
           </div>
-        </div>
+        </SectionCard>
 
-        {/* Attendance */}
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <h2 className="text-lg font-bold text-slate-900">Attendance Overview</h2>
-          <p className="mt-1 text-sm text-slate-600">
-            Attendance percentage by group from attendance history.
-          </p>
-
-          <div className="mt-6 space-y-4">
+        <SectionCard
+          title="Attendance Overview"
+          description="Attendance percentage by group from attendance history."
+        >
+          <div className="space-y-4">
             {attendanceByGroup.map((item) => (
               <div key={item.group}>
                 <div className="mb-1 flex items-center justify-between text-sm">
-                  <span className="font-medium text-slate-800">{item.group}</span>
+                  <span className="font-medium text-slate-800">
+                    {item.group}
+                  </span>
                   <span className="font-semibold text-slate-600">
                     {item.percentage}%
                   </span>
@@ -337,26 +339,25 @@ export default function ReportsPage() {
               </div>
             ))}
           </div>
-        </div>
+        </SectionCard>
       </div>
 
-      {/* Students by group + Recent activity */}
-      <div className="mt-6 grid gap-6 lg:grid-cols-2">
-        {/* Students by group */}
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <h2 className="text-lg font-bold text-slate-900">Students by Group</h2>
-          <p className="mt-1 text-sm text-slate-600">
-            Current student distribution by active group.
-          </p>
-
-          <div className="mt-6 space-y-4">
+      {/* Students by group + recent activity */}
+      <div className="grid gap-6 xl:grid-cols-2">
+        <SectionCard
+          title="Students by Group"
+          description="Current student distribution by active group."
+        >
+          <div className="space-y-4">
             {studentsByGroup.map((item) => {
               const percentage = Math.round((item.total / totalStudents) * 100);
 
               return (
                 <div key={item.group}>
                   <div className="mb-1 flex items-center justify-between text-sm">
-                    <span className="font-medium text-slate-800">{item.group}</span>
+                    <span className="font-medium text-slate-800">
+                      {item.group}
+                    </span>
                     <span className="font-semibold text-slate-600">
                       {item.total} students
                     </span>
@@ -372,16 +373,13 @@ export default function ReportsPage() {
               );
             })}
           </div>
-        </div>
+        </SectionCard>
 
-        {/* Recent activity */}
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <h2 className="text-lg font-bold text-slate-900">Recent Report Activity</h2>
-          <p className="mt-1 text-sm text-slate-600">
-            Recent reporting actions and generated summaries.
-          </p>
-
-          <div className="mt-6 space-y-4">
+        <SectionCard
+          title="Recent Report Activity"
+          description="Recent reporting actions and generated summaries."
+        >
+          <div className="space-y-3">
             {recentActivities.map((activity) => (
               <div
                 key={activity.id}
@@ -392,7 +390,7 @@ export default function ReportsPage() {
               </div>
             ))}
           </div>
-        </div>
+        </SectionCard>
       </div>
     </div>
   );

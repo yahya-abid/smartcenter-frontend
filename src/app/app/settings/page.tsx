@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { PageHeader } from "@/components/ui/PageHeader";
+import { SectionCard } from "@/components/ui/SectionCard";
 
 type SettingsFormData = {
   centerName: string;
@@ -58,31 +60,149 @@ export default function SettingsPage() {
       return;
     }
 
-    // Placeholder for backend save later
     console.log("Saved settings:", formData);
     setSaved(true);
   }
 
   return (
-    <div>
-      {/* Header */}
-      <div className="flex flex-col gap-2">
-        <h1 className="text-2xl font-bold text-slate-900">Settings</h1>
-        <p className="text-slate-600">
-          Manage center identity, branding, and preferences.
-        </p>
-      </div>
+    <div className="space-y-6">
+      <PageHeader
+        title="Settings"
+        description="Manage center identity, branding, and workspace preferences."
+        action={
+          <button
+            type="submit"
+            form="settings-form"
+            className="rounded-xl bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white hover:bg-slate-800"
+          >
+            Save Settings
+          </button>
+        }
+      />
 
-      {/* Main form */}
-      <form onSubmit={handleSubmit} className="mt-6 space-y-6">
-        {/* Center profile */}
-        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-          <h2 className="text-lg font-bold text-slate-900">Center Profile</h2>
-          <p className="mt-1 text-sm text-slate-600">
-            Basic information about the center.
-          </p>
+      {/* Premium hero preview */}
+      <section className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+        <div className="grid gap-0 lg:grid-cols-[1.4fr_0.9fr]">
+          {/* Left side */}
+          <div className="p-6 md:p-8">
+            <p className="text-sm font-semibold text-slate-500">
+              Workspace Identity
+            </p>
+            <h2 className="mt-2 text-3xl font-bold tracking-tight text-slate-900">
+              {formData.centerName || "Center Name"}
+            </h2>
+            <p className="mt-3 max-w-2xl text-slate-600">
+              Customize how your center appears across the SmartCenter dashboard,
+              reports, and billing workspace.
+            </p>
 
-          <div className="mt-6 grid gap-4 md:grid-cols-2">
+            <div className="mt-6 flex flex-wrap gap-3">
+              <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+                <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
+                  Center Type
+                </p>
+                <p className="mt-1 font-semibold text-slate-900">
+                  {formData.centerType || "Tutoring Center"}
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+                <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
+                  Currency
+                </p>
+                <p className="mt-1 font-semibold text-slate-900">
+                  {formData.currency}
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+                <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
+                  Contact
+                </p>
+                <p className="mt-1 font-semibold text-slate-900">
+                  {formData.phone}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Right side preview card */}
+          <div className="border-t border-slate-200 bg-slate-50 p-6 md:border-l md:border-t-0 md:p-8">
+            <p className="text-sm font-semibold text-slate-500">Live Preview</p>
+
+            <div className="mt-4 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+              <div className="flex items-center gap-4">
+                {formData.logoUrl ? (
+                  <img
+                    src={formData.logoUrl}
+                    alt="Center logo"
+                    className="h-16 w-16 rounded-2xl object-cover ring-1 ring-slate-200"
+                  />
+                ) : (
+                  <div
+                    className="flex h-16 w-16 items-center justify-center rounded-2xl text-lg font-bold text-white"
+                    style={{ backgroundColor: formData.primaryColor }}
+                  >
+                    SC
+                  </div>
+                )}
+
+                <div className="min-w-0">
+                  <p className="truncate text-lg font-bold text-slate-900">
+                    {formData.centerName || "Center Name"}
+                  </p>
+                  <p className="truncate text-sm text-slate-600">
+                    {formData.centerType || "Center Type"}
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-5 space-y-3">
+                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
+                  <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
+                    Email
+                  </p>
+                  <p className="mt-1 truncate text-sm font-medium text-slate-900">
+                    {formData.email || "contact@example.com"}
+                  </p>
+                </div>
+
+                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
+                  <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
+                    Address
+                  </p>
+                  <p className="mt-1 text-sm font-medium text-slate-900">
+                    {formData.address || "Center address"}
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-5 flex items-center justify-between rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+                <span className="text-sm font-medium text-slate-600">
+                  Primary Color
+                </span>
+                <div className="flex items-center gap-3">
+                  <div
+                    className="h-6 w-6 rounded-full border border-slate-200"
+                    style={{ backgroundColor: formData.primaryColor }}
+                  />
+                  <span className="text-sm font-semibold text-slate-900">
+                    {formData.primaryColor}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <form id="settings-form" onSubmit={handleSubmit} className="space-y-6">
+        {/* Center Profile */}
+        <SectionCard
+          title="Center Profile"
+          description="Basic information used across the workspace and public identity."
+        >
+          <div className="grid gap-4 md:grid-cols-2">
             <div>
               <label className="mb-1 block text-sm font-medium text-slate-700">
                 Center Name
@@ -153,16 +273,14 @@ export default function SettingsPage() {
               placeholder="Enter address"
             />
           </div>
-        </div>
+        </SectionCard>
 
         {/* Branding */}
-        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-          <h2 className="text-lg font-bold text-slate-900">Branding</h2>
-          <p className="mt-1 text-sm text-slate-600">
-            Customize logo and main theme color.
-          </p>
-
-          <div className="mt-6 grid gap-4 md:grid-cols-2">
+        <SectionCard
+          title="Branding"
+          description="Customize how your center appears visually in the platform."
+        >
+          <div className="grid gap-4 md:grid-cols-2">
             <div>
               <label className="mb-1 block text-sm font-medium text-slate-700">
                 Logo URL
@@ -175,6 +293,9 @@ export default function SettingsPage() {
                 className="sc-input"
                 placeholder="Paste logo image URL"
               />
+              <p className="mt-2 text-xs text-slate-500">
+                Optional. If empty, a branded placeholder will be shown.
+              </p>
             </div>
 
             <div>
@@ -187,7 +308,7 @@ export default function SettingsPage() {
                   name="primaryColor"
                   value={formData.primaryColor}
                   onChange={handleChange}
-                  className="sc-input"
+                  className="h-12 w-16 rounded-xl border border-slate-200 bg-white p-1"
                 />
                 <input
                   type="text"
@@ -200,50 +321,14 @@ export default function SettingsPage() {
               </div>
             </div>
           </div>
-
-          <div className="mt-6">
-            <p className="mb-2 text-sm font-medium text-slate-700">
-              Live Preview
-            </p>
-
-            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-              <div className="flex items-center gap-3">
-                {formData.logoUrl ? (
-                  <img
-                    src={formData.logoUrl}
-                    alt="Center logo"
-                    className="h-12 w-12 rounded-xl object-cover"
-                  />
-                ) : (
-                  <div
-                    className="flex h-12 w-12 items-center justify-center rounded-xl text-sm font-bold text-white"
-                    style={{ backgroundColor: formData.primaryColor }}
-                  >
-                    SC
-                  </div>
-                )}
-
-                <div>
-                  <p className="font-semibold text-slate-900">
-                    {formData.centerName || "Center Name"}
-                  </p>
-                  <p className="text-sm text-slate-600">
-                    {formData.centerType || "Center Type"}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        </SectionCard>
 
         {/* Preferences */}
-        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-          <h2 className="text-lg font-bold text-slate-900">Preferences</h2>
-          <p className="mt-1 text-sm text-slate-600">
-            Configure local preferences used across the dashboard.
-          </p>
-
-          <div className="mt-6 grid gap-4 md:grid-cols-2">
+        <SectionCard
+          title="Preferences"
+          description="Local settings used across billing, reports, and workspace defaults."
+        >
+          <div className="grid gap-4 md:grid-cols-2">
             <div>
               <label className="mb-1 block text-sm font-medium text-slate-700">
                 Currency
@@ -259,28 +344,42 @@ export default function SettingsPage() {
                 <option value="USD">USD</option>
               </select>
             </div>
+
+            <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-4">
+              <p className="text-sm font-semibold text-slate-900">
+                Future Preferences
+              </p>
+              <p className="mt-2 text-sm text-slate-600">
+                You can later add timezone, interface language, receipt format,
+                invoice prefix, and date formatting here.
+              </p>
+            </div>
           </div>
-        </div>
+        </SectionCard>
 
-        {/* Save area */}
-        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-          {saved ? (
-            <p className="text-sm font-medium text-emerald-600">
-              Settings saved successfully.
-            </p>
-          ) : (
-            <p className="text-sm text-slate-500">
-              Changes are local for now until backend integration.
-            </p>
-          )}
+        {/* Save footer */}
+        <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div>
+              {saved ? (
+                <p className="text-sm font-semibold text-emerald-600">
+                  Settings saved successfully.
+                </p>
+              ) : (
+                <p className="text-sm text-slate-500">
+                  Changes are local for now until backend integration is connected.
+                </p>
+              )}
+            </div>
 
-          <button
-            type="submit"
-            className="rounded-xl bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white hover:bg-slate-800"
-          >
-            Save Settings
-          </button>
-        </div>
+            <button
+              type="submit"
+              className="rounded-xl bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white hover:bg-slate-800"
+            >
+              Save Settings
+            </button>
+          </div>
+        </section>
       </form>
     </div>
   );
