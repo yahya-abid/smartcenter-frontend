@@ -1,11 +1,23 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { EmptyState } from "@/components/ui/EmptyState";
+import { PageHeader } from "@/components/ui/PageHeader";
+import { SectionCard } from "@/components/ui/SectionCard";
+import { StatusBadge } from "@/components/ui/StatusBadge";
 
 type PaymentStatus = "PAID" | "LATE" | "NONE";
 
 type Student = {
   id: number;
+  fullName: string;
+  phone: string;
+  level: string;
+  group: string;
+  paymentStatus: PaymentStatus;
+};
+
+type StudentFormData = {
   fullName: string;
   phone: string;
   level: string;
@@ -40,14 +52,6 @@ const initialStudents: Student[] = [
   },
 ];
 
-type StudentFormData = {
-  fullName: string;
-  phone: string;
-  level: string;
-  group: string;
-  paymentStatus: PaymentStatus;
-};
-
 const emptyForm: StudentFormData = {
   fullName: "",
   phone: "",
@@ -56,16 +60,16 @@ const emptyForm: StudentFormData = {
   paymentStatus: "NONE",
 };
 
-function getStatusClasses(status: PaymentStatus) {
+function getPaymentVariant(status: PaymentStatus) {
   switch (status) {
     case "PAID":
-      return "bg-emerald-100 text-emerald-700";
+      return "success";
     case "LATE":
-      return "bg-amber-100 text-amber-700";
+      return "danger";
     case "NONE":
-      return "bg-slate-100 text-slate-700";
+      return "neutral";
     default:
-      return "bg-slate-100 text-slate-700";
+      return "neutral";
   }
 }
 
@@ -77,8 +81,9 @@ export default function StudentsPage() {
   const [formData, setFormData] = useState<StudentFormData>(emptyForm);
 
   const filteredStudents = useMemo(() => {
+    const term = search.toLowerCase();
+
     return students.filter((student) => {
-      const term = search.toLowerCase();
       return (
         student.fullName.toLowerCase().includes(term) ||
         student.phone.toLowerCase().includes(term) ||
@@ -115,10 +120,12 @@ export default function StudentsPage() {
   function handleChange(
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) {
-    const { name, value } = e.target;
+    const field = e.target.name as keyof StudentFormData;
+    const value = e.target.value as StudentFormData[keyof StudentFormData];
+
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [field]: value,
     }));
   }
 
@@ -161,26 +168,21 @@ export default function StudentsPage() {
   }
 
   return (
-    <div>
-      {/* Header */}
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900">Students</h1>
-          <p className="mt-1 text-slate-600">
-            Manage students, groups, and payment status.
-          </p>
-        </div>
+    <div className="space-y-6">
+      <PageHeader
+        title="Students"
+        description="Manage students, levels, groups, and payment status."
+        action={
+          <button
+            onClick={openAddModal}
+            className="rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white hover:bg-slate-800"
+          >
+            + Add Student
+          </button>
+        }
+      />
 
-        <button
-          onClick={openAddModal}
-          className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800"
-        >
-          + Add Student
-        </button>
-      </div>
-
-      {/* Search */}
-      <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+      <SectionCard title="Search" description="Find students quickly by any field.">
         <input
           type="text"
           placeholder="Search by name, phone, level, or group..."
@@ -188,38 +190,44 @@ export default function StudentsPage() {
           onChange={(e) => setSearch(e.target.value)}
           className="sc-input"
         />
-      </div>
+      </SectionCard>
 
-      {/* Table */}
-      <div className="mt-6 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-        <div className="overflow-x-auto">
-          <table className="min-w-full text-left text-sm">
-            <thead className="bg-slate-50 text-slate-600">
-              <tr>
-                <th className="px-4 py-3 font-semibold">Full Name</th>
-                <th className="px-4 py-3 font-semibold">Phone</th>
-                <th className="px-4 py-3 font-semibold">Level</th>
-                <th className="px-4 py-3 font-semibold">Group</th>
-                <th className="px-4 py-3 font-semibold">Payment</th>
-                <th className="px-4 py-3 font-semibold">Actions</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {filteredStudents.length === 0 ? (
+      <SectionCard
+        title="Students List"
+        description={`${filteredStudents.length} result(s) found`}
+      >
+        {filteredStudents.length === 0 ? (
+          <EmptyState
+            title="No students found"
+            description="Try another search or add a new student."
+            action={
+              <button
+                onClick={openAddModal}
+                className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800"
+              >
+                Add Student
+              </button>
+            }
+          />
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="min-w-full text-left text-sm">
+              <thead className="bg-slate-50 text-slate-600">
                 <tr>
-                  <td
-                    colSpan={6}
-                    className="px-4 py-8 text-center text-slate-500"
-                  >
-                    No students found.
-                  </td>
+                  <th className="px-4 py-3 font-semibold">Full Name</th>
+                  <th className="px-4 py-3 font-semibold">Phone</th>
+                  <th className="px-4 py-3 font-semibold">Level</th>
+                  <th className="px-4 py-3 font-semibold">Group</th>
+                  <th className="px-4 py-3 font-semibold">Payment</th>
+                  <th className="px-4 py-3 font-semibold">Actions</th>
                 </tr>
-              ) : (
-                filteredStudents.map((student) => (
+              </thead>
+
+              <tbody>
+                {filteredStudents.map((student) => (
                   <tr
                     key={student.id}
-                    className="border-t border-slate-200 text-slate-700"
+                    className="border-t border-slate-200 text-slate-700 transition hover:bg-slate-50"
                   >
                     <td className="px-4 py-3 font-medium text-slate-900">
                       {student.fullName}
@@ -228,13 +236,10 @@ export default function StudentsPage() {
                     <td className="px-4 py-3">{student.level}</td>
                     <td className="px-4 py-3">{student.group}</td>
                     <td className="px-4 py-3">
-                      <span
-                        className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${getStatusClasses(
-                          student.paymentStatus
-                        )}`}
-                      >
-                        {student.paymentStatus}
-                      </span>
+                      <StatusBadge
+                        label={student.paymentStatus}
+                        variant={getPaymentVariant(student.paymentStatus)}
+                      />
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex gap-2">
@@ -254,12 +259,12 @@ export default function StudentsPage() {
                       </div>
                     </td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </SectionCard>
 
       {/* Modal */}
       {isModalOpen && (
